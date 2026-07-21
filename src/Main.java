@@ -127,6 +127,21 @@ public class Main {
         scanner.close();
     }
 
+    // builds full list of events for front end
+    static List<Event> buildEventList() throws Exception {
+        List<Event> events = new ArrayList<>();
+
+        List<String> calendarLinks = Files.readAllLines(Paths.get("links.txt"));
+        for (String link : calendarLinks) {
+            if (link.isBlank())
+                continue;
+            addEvents(link, events);
+        }
+
+        loadTasks(events);
+        return events;
+    }
+
     // Prints events in list ex. "1) 2026-01-18 08:00 Study [done]"
     static void showList(List<Event> list) {
         System.out.println("\nYour list (" + list.size() + "):");
