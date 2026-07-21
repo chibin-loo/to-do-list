@@ -139,7 +139,24 @@ public class Main {
         }
 
         loadTasks(events);
+        // Sort by date+time so earliest comes first
+        events.sort((a, b) -> whenKey(a).compareTo(whenKey(b)));
         return events;
+    }
+
+    // Appends one new task to tasks.txt
+    static void saveNewTask(Event e) throws Exception {
+        List<String> line = new ArrayList<>();
+        line.add(lineFor(e));
+        Files.write(Paths.get("tasks.txt"), line,
+                java.nio.file.StandardOpenOption.CREATE,
+                java.nio.file.StandardOpenOption.APPEND);
+    }
+
+    // Makes a sortable text key like "2026-01-20 18:00" from an event
+    static String whenKey(Event e) {
+        String t = e.time.isBlank() ? "00:00" : e.time;
+        return e.date + " " + t;
     }
 
     // Prints events in list ex. "1) 2026-01-18 08:00 Study [done]"
